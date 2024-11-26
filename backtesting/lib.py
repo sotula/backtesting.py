@@ -421,7 +421,7 @@ http://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases
             agg = {column: OHLCV_AGG.get(column, 'last')
                    for column in series.columns}
 
-    resampled = series.resample(rule, label='right').agg(agg).dropna()
+    resampled = series.resample(rule, label='left').agg(agg).dropna()
     resampled.name = _as_str(series) + '[' + rule + ']'
 
     # Check first few stack frames if we are being called from
@@ -449,7 +449,7 @@ http://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases
         if not isinstance(result.index, pd.DatetimeIndex):
             result.index = resampled.index
         result = result.reindex(index=series.index.union(resampled.index),
-                                method='bfill').reindex(series.index)
+                                method='ffill').reindex(series.index)
         return result
 
     wrap_func.__name__ = func.__name__
